@@ -334,6 +334,70 @@
 				    </table>
 				</div>
 				
+				<h1>Bad Clients</h1>
+				<div align="center">
+				    <table border="1" cellpadding="6">
+				        <caption><h2>Bad Clients</h2></caption>
+				        <tr>
+				            <th>Client ID</th>
+				            <th>First Name</th>
+				            <th>Last Name</th>
+				        </tr>
+				        <c:forEach var="client" items="${listBadClients}">
+				            <tr style="text-align:center">
+				                <td><c:out value="${client.clientID}" /></td>
+				                <td><c:out value="${client.firstName}" /></td>
+				                <td><c:out value="${client.lastName}" /></td>
+				            </tr>
+				        </c:forEach>
+				    </table>
+				</div>
+				<h1>Good Clients</h1>
+				<div align="center">
+				    <table border="1" cellpadding="6">
+				        <caption><h2>Good Clients</h2></caption>
+				        <tr>
+				            <th>Client ID</th>
+				            <th>First Name</th>
+				            <th>Last Name</th>
+				        </tr>
+				        <c:forEach var="client" items="${listGoodClients}">
+				            <tr style="text-align:center">
+				                <td><c:out value="${client.clientID}" /></td>
+				                <td><c:out value="${client.firstName}" /></td>
+				                <td><c:out value="${client.lastName}" /></td>
+				            </tr>
+				        </c:forEach>
+				    </table>
+				</div>
+				
+				<h1>Client Statistics</h1>
+				<div align="center">
+				    <table border="1" cellpadding="6">
+				        <caption><h2>Client Statistics</h2></caption>
+				        <tr>
+				            <th>Client ID</th>
+				            <th>First Name</th>
+				            <th>Last Name</th>
+				            <th>Total Due Amount</th>
+				            <th>Total Paid Amount</th>
+				            <th>Finish Date</th>
+				        </tr>
+				        <c:forEach var="stat" items="${listClientStatistics}">
+				            <tr style="text-align:center">
+				                <td><c:out value="${stat.clientID}" /></td>
+				                <td><c:out value="${stat.firstName}" /></td>
+				                <td><c:out value="${stat.lastName}" /></td>
+				                <td><c:out value="${stat.totalDueAmount}" /></td>
+				                <td><c:out value="${stat.totalPaidAmount}" /></td>
+				                <td><c:out value="${stat.finishDate == null ? 'N/A' : stat.finishDate}" /></td>
+				            </tr>
+				        </c:forEach>
+				    </table>
+				</div>
+
+				
+				
 				
 							
 	</div>

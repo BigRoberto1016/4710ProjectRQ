@@ -124,6 +124,49 @@
             </c:forEach>
         </table>
     </div>
+    <h1>Bills</h1>
+		<div align="center">
+		    <table border="1" cellpadding="6">
+		        <caption><h2>List of Bills</h2></caption>
+		        <tr>
+		            <th>Bill ID</th>
+		            <th>Order ID</th>
+		            <th>Client ID</th>
+		            <th>Price</th>
+		            <th>Date Generated</th>
+		            <th>Date Paid</th>
+		            <th>Status</th>
+		        </tr>
+		        <c:forEach var="bill" items="${listAllBills}">
+		            <tr style="text-align:center">
+		                <td><c:out value="${bill.billID}" /></td>
+		                <td><c:out value="${bill.orderID}" /></td>
+		                <td><c:out value="${bill.clientID}" /></td>
+		                <td><c:out value="${bill.price}" /></td>
+		                <td><c:out value="${bill.dateGenerated}" /></td>
+		                <td><c:out value="${bill.datePaid}" /></td>
+		                <td><c:out value="${bill.status}" /></td>
+		            </tr>
+		        </c:forEach>
+		    </table>
+		</div>
+		
+		<h1>Revenue</h1>
+		<div align="center">
+		    <table border="1" cellpadding="6">
+		        <caption><h2>Revenue Statistics</h2></caption>
+		        <tr>
+		            <th>Total Income</th>
+		            <th>Amount Awaited</th>
+		        </tr>
+		        <tr style="text-align:center">
+		            <td><c:out value="${revenueStats.totalIncome}" /></td>
+		            <td><c:out value="${revenueStats.amountAwaited}" /></td>
+		        </tr>
+		    </table>
+		</div>
+		
+    
 	</div>
 </body>
 </html>
