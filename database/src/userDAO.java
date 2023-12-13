@@ -1216,6 +1216,118 @@ public class userDAO
     }
 
 
+    public List<BadClient> listBadClients() throws SQLException {
+        List<BadClient> badClients = new ArrayList<>();
+        String sql = "SELECT DISTINCT u.id, u.firstName, u.lastName " +
+                     "FROM User u " +
+                     "JOIN Bills b ON u.id = b.clientID " +
+                     "WHERE (b.datePaid > DATE_ADD(b.dateGenerated, INTERVAL 7 DAY)) " +
+                     "   OR (b.datePaid IS NULL AND b.dateGenerated < DATE_SUB(CURDATE(), INTERVAL 7 DAY));";
+
+        connect_func();
+        try (Statement statement = connect.createStatement();
+             ResultSet resultSet = statement.executeQuery(sql)) {
+
+            while (resultSet.next()) {
+                BadClient client = new BadClient(
+                    resultSet.getInt("id"),
+                    resultSet.getString("firstName"),
+                    resultSet.getString("lastName")
+                );
+                badClients.add(client);
+            }
+        } finally {
+            disconnect();
+        }
+        return badClients;
+    }
+
+    public List<GoodClient> listGoodClients() throws SQLException {
+        List<GoodClient> goodClients = new ArrayList<>();
+        String sql = "SELECT DISTINCT u.id, u.firstName, u.lastName " +
+                     "FROM User u " +
+                     "JOIN Bills b ON u.id = b.clientID " +
+                     "WHERE b.datePaid <= DATE_ADD(b.dateGenerated, INTERVAL 1 DAY) " +
+                     "AND b.status = 'Paid';";
+
+        connect_func();
+        try (Statement statement = connect.createStatement();
+             ResultSet resultSet = statement.executeQuery(sql)) {
+
+            while (resultSet.next()) {
+                GoodClient client = new GoodClient(
+                    resultSet.getInt("id"),
+                    resultSet.getString("firstName"),
+                    resultSet.getString("lastName")
+                );
+                goodClients.add(client);
+            }
+        } finally {
+            disconnect();
+        }
+        return goodClients;
+    }
+
+    public List<ClientStatistics> listClientStatistics() throws SQLException {
+        List<ClientStatistics> clientStatistics = new ArrayList<>();
+        String sql = "SELECT " +
+                     "    u.id AS clientID, " +
+                     "    u.firstName, " +
+                     "    u.lastName, " +
+                     "    COALESCE(SUM(b.price), 0) AS totalDueAmount, " +
+                     "    COALESCE(SUM(CASE WHEN b.status = 'Paid' THEN b.price ELSE 0 END), 0) AS totalPaidAmount, " +
+                     "    MAX(o.scheduleEnd) AS finishDate " +
+                     "FROM User u " +
+                     "LEFT JOIN Orders o ON u.id = o.clientID AND o.status = 'Finished' " +
+                     "LEFT JOIN Bills b ON o.orderID = b.orderID " +
+                     "GROUP BY u.id;";
+
+        connect_func();
+        try (Statement statement = connect.createStatement();
+             ResultSet resultSet = statement.executeQuery(sql)) {
+
+            while (resultSet.next()) {
+                ClientStatistics stats = new ClientStatistics(
+                    resultSet.getInt("clientID"),
+                    resultSet.getString("firstName"),
+                    resultSet.getString("lastName"),
+                    resultSet.getDouble("totalDueAmount"),
+                    resultSet.getDouble("totalPaidAmount"),
+                    resultSet.getDate("finishDate")
+                );
+                clientStatistics.add(stats);
+            }
+        } finally {
+            disconnect();
+        }
+        return clientStatistics;
+    }
+
+    public RevenueStatistics getRevenueStatistics() throws SQLException {
+        RevenueStatistics stats = null;
+        String sql = "SELECT " +
+                     "SUM(CASE WHEN status = 'Paid' THEN price ELSE 0 END) AS totalIncome, " +
+                     "SUM(CASE WHEN status != 'Paid' AND dateGenerated < CURDATE() THEN price ELSE 0 END) AS amountAwaited " +
+                     "FROM Bills WHERE orderID IN (SELECT orderID FROM Orders WHERE status = 'Finished');";
+
+        connect_func();
+        try (Statement statement = connect.createStatement();
+             ResultSet resultSet = statement.executeQuery(sql)) {
+
+            if (resultSet.next()) {
+                stats = new RevenueStatistics(
+                    resultSet.getDouble("totalIncome"),
+                    resultSet.getDouble("amountAwaited")
+                );
+            }
+        } finally {
+            disconnect();
+        }
+        return stats;
+    }
+
+
+    
     public void init() throws SQLException, FileNotFoundException, IOException{
     	connect_func();
         statement =  (Statement) connect.createStatement();

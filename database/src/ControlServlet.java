@@ -230,6 +230,9 @@ public class ControlServlet extends HttpServlet {
 		    request.setAttribute("listProspectiveClients", userDAO.listProspectiveClients());
 		    request.setAttribute("listHighestTrees", userDAO.listHighestTrees());
 		    request.setAttribute("listOverdueBills", userDAO.listOverdueBills());
+		    request.setAttribute("listBadClients", userDAO.listBadClients());
+		    request.setAttribute("listGoodClients", userDAO.listGoodClients());
+		    request.setAttribute("listClientStatistics", userDAO.listClientStatistics());
 	    	request.getRequestDispatcher("rootView.jsp").forward(request, response);
 	    }
 	    
@@ -239,6 +242,9 @@ public class ControlServlet extends HttpServlet {
 	        List<QuoteMessageWithPrice>listAllQuoteMessagesWithPrice = userDAO.listAllQuoteMessagesWithPrice();
 	        request.setAttribute("listAllQuoteMessagesWithPrice", listAllQuoteMessagesWithPrice);
 	        request.setAttribute("listAllOrders", userDAO.listAllOrders());
+	        RevenueStatistics revenueStats = userDAO.getRevenueStatistics();
+	        request.setAttribute("listAllBills", userDAO.listAllBills());
+	        request.setAttribute("revenueStats", revenueStats);
 	    	request.getRequestDispatcher("davidSmithDashboard.jsp").forward(request, response);
 	    }
 	    
