@@ -1157,6 +1157,64 @@ public class userDAO
         return prospectiveClients;
     }
 
+    public List<HighestTree> listHighestTrees() throws SQLException {
+        List<HighestTree> highestTrees = new ArrayList<>();
+        String sql = "SELECT t.treeID, t.height, t.location " +
+                     "FROM Tree t " +
+                     "JOIN Orders o ON t.quoteID = o.quoteID " +
+                     "WHERE o.status = 'Finished' AND t.height = (" +
+                     "    SELECT MAX(height) FROM Tree t2 " +
+                     "    JOIN Orders o2 ON t2.quoteID = o2.quoteID " +
+                     "    WHERE o2.status = 'Finished'" +
+                     ");";
+
+        connect_func();
+        try (Statement statement = connect.createStatement();
+             ResultSet resultSet = statement.executeQuery(sql)) {
+
+            while (resultSet.next()) {
+                HighestTree tree = new HighestTree(
+                    resultSet.getInt("treeID"),
+                    resultSet.getDouble("height"),
+                    resultSet.getString("location")
+                );
+                highestTrees.add(tree);
+            }
+        } finally {
+            disconnect();
+        }
+        return highestTrees;
+    }
+
+    public List<OverdueBill> listOverdueBills() throws SQLException {
+        List<OverdueBill> overdueBills = new ArrayList<>();
+        String sql = "SELECT b.billID, b.orderID, b.clientID, b.price, b.dateGenerated, b.datePaid, b.status " +
+                     "FROM Bills b " +
+                     "WHERE (b.datePaid IS NULL AND b.dateGenerated < DATE_SUB(CURDATE(), INTERVAL 7 DAY)) " +
+                     "   OR (b.datePaid > DATE_ADD(b.dateGenerated, INTERVAL 7 DAY));";
+
+        connect_func();
+        try (Statement statement = connect.createStatement();
+             ResultSet resultSet = statement.executeQuery(sql)) {
+
+            while (resultSet.next()) {
+                OverdueBill bill = new OverdueBill(
+                    resultSet.getInt("billID"),
+                    resultSet.getString("orderID"),
+                    resultSet.getInt("clientID"),
+                    resultSet.getDouble("price"),
+                    resultSet.getDate("dateGenerated"),
+                    resultSet.getDate("datePaid"),
+                    resultSet.getString("status")
+                );
+                overdueBills.add(bill);
+            }
+        } finally {
+            disconnect();
+        }
+        return overdueBills;
+    }
+
 
     public void init() throws SQLException, FileNotFoundException, IOException{
     	connect_func();
@@ -1315,7 +1373,7 @@ public class userDAO
         		 			"(5, 5, 220.40, '2023-07-10', NULL, 'Unpaid')," +
         		 			"(6, 6, 180.90, '2023-05-12', '2023-05-13', 'Paid')," +
         		 			"(7, 7, 250.30, '2023-11-15', NULL, 'Unpaid')," +
-        		 			"(8, 8, 160.00, '2023-10-13', NULL, 'Unpaid')," +
+        		 			"(8, 8, 160.00, '2023-12-13', NULL, 'Unpaid')," +
         		 			"(9, 9, 190.85, '2023-11-22', '2023-12-11', 'Paid')," +
         		 			"(10, 10, 210.60, '2023-01-05', NULL, 'Unpaid');"),        		 			
         		 			("INSERT INTO BillMessages (clientID, billID, msgTime, price, note) VALUES" +

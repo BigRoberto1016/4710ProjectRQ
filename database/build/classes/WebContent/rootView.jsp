@@ -288,6 +288,53 @@
 				        </c:forEach>
 				    </table>
 				</div>
+				<h1>Highest Trees in Finished Orders</h1>
+				<div align="center">
+				    <table border="1" cellpadding="6">
+				        <caption><h2>Highest Trees</h2></caption>
+				        <tr>
+				            <th>Tree ID</th>
+				            <th>Height</th>
+				            <th>Location</th>
+				        </tr>
+				        <c:forEach var="tree" items="${listHighestTrees}">
+				            <tr style="text-align:center">
+				                <td><c:out value="${tree.treeID}" /></td>
+				                <td><c:out value="${tree.height}" /></td>
+				                <td><c:out value="${tree.location}" /></td>
+				            </tr>
+				        </c:forEach>
+				    </table>
+				</div>
+				
+				<h1>Overdue Bills</h1>
+				<div align="center">
+				    <table border="1" cellpadding="6">
+				        <caption><h2>Overdue Bills</h2></caption>
+				        <tr>
+				            <th>Bill ID</th>
+				            <th>Order ID</th>
+				            <th>Client ID</th>
+				            <th>Price</th>
+				            <th>Date Generated</th>
+				            <th>Date Paid</th>
+				            <th>Status</th>
+				        </tr>
+				        <c:forEach var="bill" items="${listOverdueBills}">
+				            <tr style="text-align:center">
+				                <td><c:out value="${bill.billID}" /></td>
+				                <td><c:out value="${bill.orderID}" /></td>
+				                <td><c:out value="${bill.clientID}" /></td>
+				                <td><c:out value="${bill.price}" /></td>
+				                <td><c:out value="${bill.dateGenerated}" /></td>
+				                <td><c:out value="${bill.datePaid}" /></td>
+				                <td><c:out value="${bill.status}" /></td>
+				            </tr>
+				        </c:forEach>
+				    </table>
+				</div>
+				
+				
 							
 	</div>
 
