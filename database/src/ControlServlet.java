@@ -228,6 +228,8 @@ public class ControlServlet extends HttpServlet {
 		    request.setAttribute("listEasyClients", userDAO.listEasyClients());
 		    request.setAttribute("listOneTreeQuotes", userDAO.listOneTreeQuotes());
 		    request.setAttribute("listProspectiveClients", userDAO.listProspectiveClients());
+		    request.setAttribute("listHighestTrees", userDAO.listHighestTrees());
+		    request.setAttribute("listOverdueBills", userDAO.listOverdueBills());
 	    	request.getRequestDispatcher("rootView.jsp").forward(request, response);
 	    }
 	    
